@@ -207,7 +207,7 @@ int main(int argc, char* argv[])
                 arma::vec vj = arma::vec(3).randn() * 0.1 * obj.d;
                 obj.add_particle( Particle(q, m, rj, vj) ); // Add a particle with random initial velocity and position
             }
-            //arma::arma_rng::set_seed_random();
+            arma::arma_rng::set_seed_random();
             arma::vec NumParticles = arma::vec(N);
             for(int j=0; j < N; j++) 
                 {
