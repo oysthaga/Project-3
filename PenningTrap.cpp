@@ -97,42 +97,44 @@ arma::vec PenningTrap::total_force(int i, double t, bool CoulombOn, double omV, 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt, double t0, bool CoulombOn, double omV, double f)
 {
-    std::vector<arma::vec> K1r;
-    std::vector<arma::vec> K1v;
-    std::vector<arma::vec> K2r;
-    std::vector<arma::vec> K2v;
-    std::vector<arma::vec> K3r;
-    std::vector<arma::vec> K3v;
-    std::vector<arma::vec> K4r;
-    std::vector<arma::vec> K4v;
-
     std::vector<Particle> p = Particles;
+
+    std::vector<arma::vec> K1r(p.size());
+    std::vector<arma::vec> K1v(p.size());
+    std::vector<arma::vec> K2r(p.size());
+    std::vector<arma::vec> K2v(p.size());
+    std::vector<arma::vec> K3r(p.size());
+    std::vector<arma::vec> K3v(p.size());
+    std::vector<arma::vec> K4r(p.size());
+    std::vector<arma::vec> K4v(p.size());
+
+    
 
     for (int j = 0; j < p.size(); j++)
     {
-        K1r.push_back( p[j].v*dt );
-        K1v.push_back( (total_force(j, t0, CoulombOn, omV, f)/p[j].m)*dt );
+        K1r[j] =  p[j].v*dt ;
+        K1v[j] =  (total_force(j, t0, CoulombOn, omV, f)/p[j].m)*dt ;
         p[j].r = Particles[j].r + K1r[j]/2;
         p[j].v = Particles[j].v +  K1v[j]/2;
     }
     for (int j = 0; j < p.size(); j++)
     {
-        K2r.push_back( p[j].v*dt );
-        K2v.push_back( (total_force(j, t0+dt/2, CoulombOn, omV, f)/p[j].m)*dt );
+        K2r[j] =  p[j].v*dt ;
+        K2v[j] =  (total_force(j, t0+dt/2, CoulombOn, omV, f)/p[j].m)*dt ;
         p[j].r = Particles[j].r + K2r[j]/2;
         p[j].v = Particles[j].v + K2v[j]/2;
     }
     for (int j = 0; j < p.size(); j++)
     {
-        K3r.push_back( p[j].v*dt );
-        K3v.push_back( (total_force(j, t0+dt, CoulombOn, omV, f)/p[j].m)*dt );
+        K3r[j] =  p[j].v*dt ;
+        K3v[j] =  (total_force(j, t0+dt/2, CoulombOn, omV, f)/p[j].m)*dt ;
         p[j].r = Particles[j].r + K3r[j];
         p[j].v = Particles[j].v + K3r[j];
     }
     for (int j = 0; j < p.size(); j++)
     {
-        K4r.push_back( p[j].v*dt );
-        K4v.push_back( (total_force(j, t0+dt, CoulombOn, omV, f)/p[j].m)*dt );
+        K4r[j] =  p[j].v*dt ;
+        K4v[j] =  (total_force(j, t0+dt, CoulombOn, omV, f)/p[j].m)*dt ;
         Particles[j].r = Particles[j].r + (K1r[j] + 2*K2r[j] + 2*K3r[j] + K4r[j])/6;
         Particles[j].v = Particles[j].v + (K1v[j] + 2*K2v[j] + 2*K3v[j] + K4v[j])/6;
     }

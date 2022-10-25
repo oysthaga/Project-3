@@ -3,10 +3,6 @@
 //# include <string>
 int main(int argc, char* argv[])
 {
-    int in = atoi(argv[1]);
-    double dt = atof(argv[2]);
-    double tN =atof(argv[3]);
-    double t0 = 0.;
 
     // Check number of command-line arguments
     if (argc != 4)  // Expects 4 command-line arguments
@@ -18,6 +14,11 @@ int main(int argc, char* argv[])
         // Exit program with non-zero return code to indicate a problem
         return 1;   
     }
+
+    int in = atoi(argv[1]);
+    double dt = atof(argv[2]);
+    double tN =atof(argv[3]);
+    double t0 = 0.;
 
     double B0 = 9.65e+1; // u/( (mu s)e )
     double V0 = 2.41e+6; // u(mu m)^2 / ( (mu s)^2 e) 
@@ -191,6 +192,11 @@ int main(int argc, char* argv[])
 
     if (in == 7)
     {
+        // Construct a Mersenne Twister 19937 random number generator with a given seed
+        std::mt19937 generator(1415184231);
+        // Construct a distribution object for the uniform distribution on [0,1)
+        std::normal_distribution<double> distribution(0.0 ,1.0);
+
         std::vector<double> f = {0.1, 0.4, 0.7};
         for  (int i = 0; i < f.size(); i++)
         {
@@ -200,14 +206,25 @@ int main(int argc, char* argv[])
             arma::vec omV  = arma::regspace(0.2, 0.02, 2.5); // MHz
             int N =  omV.size();
             int M = time.size();
-
-            for (int j = 0; j<100; j++)
+/*
+            std::cout << "f =" << f[i];
+            std::cout <<"\n";
+*/
+            for (int j = 0; j<20; j++)
             {
-                arma::vec rj = arma::vec(3).randn() * 0.1 * obj.d;
-                arma::vec vj = arma::vec(3).randn() * 0.1 * obj.d;
+
+
+                arma::vec rj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d;
+                arma::vec vj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d;
                 obj.add_particle( Particle(q, m, rj, vj) ); // Add a particle with random initial velocity and position
+/*
+                std::cout << rj;
+                std::cout <<"\n";
+                std::cout << vj;
+                std::cout <<"\n";
+*/
             }
-            arma::arma_rng::set_seed_random();
+           
             arma::vec NumParticles = arma::vec(N);
             for(int j=0; j < N; j++) 
                 {
@@ -222,6 +239,7 @@ int main(int argc, char* argv[])
             name += ".bin";
 
             NumParticles.save(name); 
+         
         }
     }
 
