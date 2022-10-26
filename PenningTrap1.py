@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 
-"""
+
 v1Eu = pa.mat()
 r1Eu = pa.mat()
 v1Eu.load("v1Eu.bin")
@@ -31,7 +31,7 @@ r2RK_interacting = pa.mat()
 v2RK_interacting.load("v2RK_interacting.bin")
 r2RK_interacting.load("r2RK_interacting.bin")
 
-"""
+
 
 r1Eu0 = pa.mat()
 r1Eu1 = pa.mat()
@@ -88,24 +88,15 @@ f3 = Aplus*np.exp(-1j*(omplus*t3+phiplus)) + Aminus*np.exp(-1j*(omminus*t3+phimi
 r0 = np.array([f0.real, f0.imag, z0]); r1 = np.array([f1.real, f1.imag, z1])
 r2 = np.array([f2.real, f2.imag, z2]); r3 = np.array([f3.real, f3.imag, z3])
 
-"""
-errEu0 = np.linalg.norm((r0 - r1Eu0)/r0, axis=0)
-errEu1 = np.linalg.norm((r1 - r1Eu1)/r1, axis=0) 
-errEu2 = np.linalg.norm((r2 - r1Eu2)/r2, axis=0)
-errEu3 = np.linalg.norm((r3 - r1Eu3)/r3, axis=0)
-errRK0 = np.linalg.norm((r0 - r1RK0)/r0, axis=0)
-errRK1 = np.linalg.norm((r1 - r1RK1)/r1, axis=0)
-errRK2 = np.linalg.norm((r2 - r1RK2)/r2, axis=0)
-errRK3 = np.linalg.norm((r3 - r1RK3)/r3, axis=0)
-"""
+
 errEu0 = np.linalg.norm(r0 - r1Eu0, axis=0) / np.linalg.norm(r0, axis=0)
 errEu1 = np.linalg.norm(r1 - r1Eu1, axis=0) / np.linalg.norm(r1, axis=0)
 errEu2 = np.linalg.norm(r2 - r1Eu2, axis=0) / np.linalg.norm(r2, axis=0)
 errEu3 = np.linalg.norm(r3 - r1Eu3, axis=0) / np.linalg.norm(r3, axis=0)
-errRK0 = np.linalg.norm(r0 - r1Eu0, axis=0) / np.linalg.norm(r0, axis=0)
-errRK1 = np.linalg.norm(r1 - r1Eu1, axis=0) / np.linalg.norm(r1, axis=0)
-errRK2 = np.linalg.norm(r2 - r1Eu2, axis=0) / np.linalg.norm(r2, axis=0)
-errRK3 = np.linalg.norm(r3 - r1Eu3, axis=0) / np.linalg.norm(r3, axis=0)
+errRK0 = np.linalg.norm(r0 - r1RK0, axis=0) / np.linalg.norm(r0, axis=0)
+errRK1 = np.linalg.norm(r1 - r1RK1, axis=0) / np.linalg.norm(r1, axis=0)
+errRK2 = np.linalg.norm(r2 - r1RK2, axis=0) / np.linalg.norm(r2, axis=0)
+errRK3 = np.linalg.norm(r3 - r1RK3, axis=0) / np.linalg.norm(r3, axis=0)
 
 DeltaEu0 = max(np.linalg.norm(r0 - r1Eu0, axis=0)) 
 DeltaEu1 = max(np.linalg.norm(r1 - r1Eu1, axis=0))
@@ -118,14 +109,14 @@ DeltaRK3 = max(np.linalg.norm(r3 - r1RK3, axis=0))
 
 # h_k/h_(k-1) = (n_(k-1))/n_k = 2 
 rerrEu = (1/3)*(np.log(DeltaEu1/DeltaEu0)+ np.log(DeltaEu2/DeltaEu1) 
-                + np.log(DeltaEu3/DeltaEu2))/np.log(2) 
+                + np.log(DeltaEu3/DeltaEu2))*np.log(1/2) 
 rerrRK = (1/3)*(np.log(DeltaRK1/DeltaRK0) + np.log(DeltaRK2/DeltaRK1) 
-                + np.log(DeltaRK3/DeltaRK2))/np.log(2) 
+                + np.log(DeltaRK3/DeltaRK2))*np.log(1/2) 
 
 print(f'r_(err, Euler) = {rerrEu}')
 print(f'r_(err, RK4) = {rerrRK}')
 
-"""
+
 # PARTICLES LEFT
 NumParticles0 = pa.mat()
 NumParticles1 = pa.mat()
@@ -137,6 +128,12 @@ NumParticles2.load("NumParticles2.bin")
 
 
 omV = np.linspace(0.2,2.5,len(NumParticles0))
+
+
+
+#-------#
+# PLOTS #
+#-------#
 
 # PLOT z AS A FUNCTION OF TIME
 N1 = np.shape(r1RK)[1]
@@ -223,11 +220,12 @@ ax2.plot(r1RK_interacting[0,:], r1RK_interacting[1,:], r1RK_interacting[2,:], la
 ax2.plot(r2RK_interacting[0,:], r2RK_interacting[1,:], r2RK_interacting[2,:], label='$P2$')
 plt.legend()
 plt.show()
-"""
+
 
 # PLOT RELATIVE ERROR BETWEEN ANALYTICAL AND NUMERICAL SOLUTION 
 plt.figure()
 plt.subplot(211)
+plt.yscale('log')
 plt.title('Error Euler')
 plt.plot(t0, errEu0, label='n1 = 4000')
 plt.plot(t1, errEu1, label='n2 = 8000')
@@ -236,6 +234,7 @@ plt.plot(t3, errEu3, label='n4 = 32000')
 plt.xlabel('$t [\mu s]$'); plt.ylabel('Relative error')
 plt.legend()
 plt.subplot(212)
+plt.yscale('log')
 plt.title('Error RK4')
 plt.plot(t0, errRK0, label='n1 = 4000')
 plt.plot(t1, errRK1, label='n2 = 8000')
@@ -244,23 +243,29 @@ plt.plot(t3, errRK3, label='n4 = 32000')
 plt.xlabel('$t [\mu s]$'); plt.ylabel('Relative error')
 plt.legend()
 
+plt.figure()
+plt.title('Error')
+plt.yscale('log')
+plt.plot(t0, errEu0, label='n1 = 4000, Euler')
+plt.plot(t1, errEu1, label='n2 = 8000, Euler')
+plt.plot(t2, errEu2, label='n3 = 16000, Euler')
+plt.plot(t3, errEu3, label='n4 = 32000, Euler')
+plt.plot(t0, errRK0, ':', label='n1 = 4000, RK4')
+plt.plot(t1, errRK1, ':', label='n2 = 8000, RK4')
+plt.plot(t2, errRK2, ':', label='n3 = 16000, RK4')
+plt.plot(t3, errRK3, ':', label='n4 = 32000, RK4')
+plt.xlabel('$t [\mu s]$'); plt.ylabel('Relative error')
+plt.legend()
 
-"""
+
+
 # PLOT PARTICLES LEFT
 plt.figure()
 plt.title('Particles left')
-plt.plot(omV, NumParticles0/NumParticles0[0], 'o', label='f = 0.1')
-plt.plot(omV, NumParticles1/NumParticles1[0], 'o', label='f = 0.4')
-plt.plot(omV, NumParticles2/NumParticles2[0], 'o', label='f = 0.7')
+plt.plot(omV, NumParticles0/10, label='f = 0.1')
+plt.plot(omV, NumParticles1/10, label='f = 0.4')
+plt.plot(omV, NumParticles2/10, label='f = 0.7')
 plt.xlabel('$\omega_V [Hz]$'); plt.ylabel('Fraction of particles left')
 plt.legend()
-"""
-plt.figure()
-plt.plot(t0, r0[0])
-plt.plot(t3, r1RK3[0,:])
-plt.figure()
-plt.plot(t0, r0[1])
-plt.plot(t3, r1RK3[1,:])
-plt.figure()
-plt.plot(t0, r0[2])
-plt.plot(t3, r1RK3[2,:])
+
+

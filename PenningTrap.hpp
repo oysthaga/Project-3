@@ -15,10 +15,9 @@ class PenningTrap
       double V0dd;
       double k_e;
       std::vector<Particle> Particles;
-      bool Vt;
 
       // Constructor
-      PenningTrap(double B0_in, double V0_in, double d_in, double V0dd_in, double k_e_in, std::vector<Particle> Particles_in, bool Vt_in=false);
+      PenningTrap(double B0_in, double V0_in, double d_in, double V0dd_in, double k_e_in, std::vector<Particle> Particles_in);
 
       // Add a particle to the trap
       void add_particle(Particle p_in);

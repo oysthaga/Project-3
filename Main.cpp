@@ -199,35 +199,22 @@ int main(int argc, char* argv[])
 
         std::vector<double> f = {0.1, 0.4, 0.7};
         for  (int i = 0; i < f.size(); i++)
-        {
-            PenningTrap obj = PenningTrap(B0, V0, d, V0/(d*d), k_e, Particles, true);
-            
+        {   
             arma::vec time = arma::regspace(t0, dt, tN);
             arma::vec omV  = arma::regspace(0.2, 0.02, 2.5); // MHz
             int N =  omV.size();
             int M = time.size();
-/*
-            std::cout << "f =" << f[i];
-            std::cout <<"\n";
-*/
-            for (int j = 0; j<20; j++) // Here, the number of particles is specified. 
-            {
 
-
-                arma::vec rj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d; // I defined the initial values manually 
-                arma::vec vj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d; // because of Armadillo linking error. 
-                obj.add_particle( Particle(q, m, rj, vj) ); // Add a particle with random initial velocity and position
-/*
-                std::cout << rj;
-                std::cout <<"\n";
-                std::cout << vj;
-                std::cout <<"\n";
-*/
-            }
-           
             arma::vec NumParticles = arma::vec(N);
             for(int j=0; j < N; j++) 
                 {
+                    PenningTrap obj = PenningTrap(B0, V0, d, V0/(d*d), k_e, Particles);
+                    for (int k = 0; k<30; k++) // Here, the number of particles is specified. 
+                    {
+                        arma::vec rj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d; // I defined the initial values manually 
+                        arma::vec vj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d; // because of Armadillo linking error. 
+                        obj.add_particle( Particle(q, m, rj, vj) ); // Add a particle with random initial velocity and position
+                    }
                     for(int k=1; k < M; k++)  
                     {
                         obj.evolve_RK4(dt, time[k], false, omV[j], f[i]);
