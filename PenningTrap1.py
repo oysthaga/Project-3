@@ -51,7 +51,8 @@ r1RK2.load("r1_RK_2.bin")
 r1RK3.load("r1_RK_3.bin")
 
 
-"""
+
+# PARTICLES LEFT
 NumParticles0 = pa.mat()
 NumParticles1 = pa.mat()
 NumParticles2 = pa.mat()
@@ -72,7 +73,7 @@ plt.xlabel('$\omega_V [Hz]$'); plt.ylabel('Fraction of particles left')
 plt.legend()
 
 
-
+# COMPARING THE ANALYTICAL AND NUMERICAL SOLUTIONS 
 q = 1 # e
 V0 = 2.41e+6 # u(mu m)^2 / ( (mu s)^2 e) 
 B0 = 9.65e+1 # u/( (mu s)e )
@@ -135,9 +136,9 @@ rerrRK = (1/3)*(np.log(DeltaRK1/DeltaRK0) + np.log(DeltaRK2/DeltaRK1)
 print(f'r_(err, Euler) = {rerrEu}')
 print(f'r_(err, RK4) = {rerrRK}')
 
+# PLOT z AS A FUNCTION OF TIME
 N1 = np.shape(r1RK)[1]
 t = np.linspace(0,50,N1)
-
 plt.figure()
 plt.plot(t, r1Eu[2,:], label='Euler')
 plt.plot(t, r1RK[2,:], label='RK4')
@@ -145,6 +146,7 @@ plt.xlabel('$t [\mu s]$'); plt.ylabel('$z [\mu m]$')
 plt.legend()
 plt.show()
 
+# PLOT xy-TRAJECTORY WITHOUT INTERACTION
 plt.figure()
 plt.title("Without interaction")
 plt.plot(r1RK[0,:], r1RK[1,:], label = "$P1$")
@@ -154,8 +156,7 @@ plt.legend()
 plt.show()
 
 
-#N2 = np.shape(r1RK_interacting)[1]
-#t2 = np.linspace(0,50,N2)
+
 plt.figure()
 plt.title("With interaction")
 plt.plot(r1RK_interacting[0,:], r1RK_interacting[1,:], label = "$P1$")

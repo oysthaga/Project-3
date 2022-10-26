@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    if (in == 7)
+    if (in == 7) // Simulate a number of particles with random initial position, se how many remain inside the trap after the specified duration. 
     {
         // Construct a Mersenne Twister 19937 random number generator with a given seed
         std::mt19937 generator(1415184231);
@@ -210,12 +210,12 @@ int main(int argc, char* argv[])
             std::cout << "f =" << f[i];
             std::cout <<"\n";
 */
-            for (int j = 0; j<20; j++)
+            for (int j = 0; j<20; j++) // Here, the number of particles is specified. 
             {
 
 
-                arma::vec rj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d;
-                arma::vec vj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d;
+                arma::vec rj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d; // I defined the initial values manually 
+                arma::vec vj = arma::vec{distribution(generator), distribution(generator), distribution(generator)} * 0.1 * obj.d; // because of Armadillo linking error. 
                 obj.add_particle( Particle(q, m, rj, vj) ); // Add a particle with random initial velocity and position
 /*
                 std::cout << rj;
